@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chi Tiết Vé</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background: linear-gradient(to bottom, #e60012, #c40010);
+      color: white;
+      padding-bottom: 20px;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px 0;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 20px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .auth-buttons button {
+      background: white;
+      color: #e60012;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .summary-title {
+      max-width: 1200px;
+      margin: 30px auto 10px;
+      padding: 0 20px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .error-message {
+      color: #e60012;
+      font-size: 16px;
+      text-align: center;
+      margin: 20px;
+      display: none;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .ticket-details-section {
+      flex: 1;
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .ticket-details-section .subtitle {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #e60012;
+    }
+
+    .flight-route {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .flight-route i {
+      color: #999;
+    }
+
+    .flight-date-time {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 30px;
+    }
+
+    .flight-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1.5fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+      align-items: start;
+    }
+
+    .airline-info {
+      font-weight: bold;
+    }
+
+    .airline-info .flight-code {
+      font-size: 14px;
+      font-weight: normal;
+      color: #777;
+    }
+
+    .airline-info .flight-id {
+      font-size: 14px;
+      font-weight: normal;
+      color: #777;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .time-info {
+      margin-bottom: 20px;
+    }
+
+    .time {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .date {
+      font-size: 13px;
+      color: #777;
+    }
+
+    .duration {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .duration i {
+      margin-right: 5px;
+      color: #555;
+    }
+
+    .airport-info {
+      padding-left: 10px;
+    }
+
+    .city-info {
+      margin-bottom: 20px;
+    }
+
+    .city {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .airport, .gate {
+      font-size: 13px;
+      color: #777;
+    }
+
+    .policy-info {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .policy-info div {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .policy-info i {
+      margin-right: 8px;
+      color: #e60012;
+    }
+
+    .non-refunded {
+      color: #999;
+    }
+
+    .non-refunded i {
+      color: #999;
+    }
+
+    .ticket-issuance {
+      color: #777;
+      margin-top: 10px;
+    }
+
+    .price-section {
+      width: 350px;
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .price-section h2 {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .price-section hr {
+      margin-bottom: 20px;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
+
+    .price-details {
+      margin-bottom: 20px;
+    }
+
+    .price-details .passenger-type {
+      margin-bottom: 16px;
+    }
+
+    .passenger-type-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #e60012;
+    }
+
+    .price-item {
+      font-size: 14px;
+      color: #777;
+      display: flex;
+      align-items: center;
+      margin-left: 16px;
+      margin-bottom: 6px;
+    }
+
+    .price-item i {
+      font-size: 8px;
+      margin-right: 8px;
+      color: #777;
+    }
+
+    .price-item span {
+      flex: 1;
+    }
+
+    .total-price {
+      border-top: 2px solid #eee;
+      padding-top: 10px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .total-price-title-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .total-price-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .total-price-amount {
+      font-size: 20px;
+      font-weight: bold;
+      color: #e60012;
+      text-align: right;
+    }
+
+    .total-price-amount-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .total-price-subtitle {
+      font-size: 13px;
+      color: #777;
+    }
+
+    .pay-button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background: #e60012;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .pay-button:hover {
+      background: #c40010;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <div class="header-top">
+        <div class="logo">BDU Air</div>
+        <nav>
+          <ul>
+            <li><a href="#">Vé máy bay</a></li>
+            <li><a href="#">Đơn hàng</a></li>
+          </ul>
+        </nav>
+        <div class="auth-buttons">
+          <button>Đăng nhập</button>
+          <button>Đăng ký</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="summary-title">Tóm tắt chuyến đi</div>
+  <div class="error-message" id="error"></div>
+
+  <div class="container">
+    <!-- TICKET DETAILS -->
+    <div class="ticket-details-section">
+      <div class="subtitle">Chuyến bay khởi hành đã chọn</div>
+      <div class="flight-route" id="flight-route"></div>
+      <div class="flight-date-time" id="flight-date-time"></div>
+      <div class="flight-details-grid">
+        <div class="airline-info">
+          <div id="airline"></div>
+          <div id="flight-code" class="flight-code"></div>
+          <div id="flight-id" class="flight-id"></div>
+        </div>
+        <div class="timeline">
+          <div class="time-info">
+            <div class="time" id="departure-time"></div>
+            <div class="date" id="departure-date"></div>
+          </div>
+          <div class="duration"><i class="far fa-clock"></i><span id="duration"></span></div>
+          <div class="time-info">
+            <div class="time" id="arrival-time"></div>
+            <div class="date" id="arrival-date"></div>
+          </div>
+        </div>
+        <div class="airport-info">
+          <div class="city-info">
+            <div class="city" id="from-city"></div>
+            <div class="airport" id="from-airport"></div>
+            <div class="gate" id="from-gate"></div>
+          </div>
+          <div class="city-info">
+            <div class="city" id="to-city"></div>
+            <div class="airport" id="to-airport"></div>
+            <div class="gate" id="to-gate"></div>
+          </div>
+        </div>
+        <div class="policy-info">
+          <div><i class="fas fa-suitcase"></i>Xách tay 7kg</div>
+          <div><i class="fas fa-sync-alt"></i>Có thể lên lịch lại</div>
+          <div class="non-refunded"><i class="fas fa-ban"></i>Không hoàn trả</div>
+          <div class="ticket-issuance"><i class="fas fa-ticket-alt"></i>Vé sẽ được phát hành <1 tiếng</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICE DETAILS -->
+    <div class="price-section">
+      <h2>Chi tiết giá</h2>
+      <hr>
+      <div class="price-details" id="price-details"></div>
+
+      <div class="total-price">
+        <div class="total-price-title-container">
+          <div class="total-price-title">Tổng giá</div>
+          <div class="total-price-subtitle" id="total-passengers"></div>
+        </div>
+        <div class="total-price-amount-container">
+          <div class="total-price-amount" id="total-price"></div>
+          <div class="total-price-subtitle">Bao gồm thuế</div>
+        </div>
+      </div>
+
+      <button class="pay-button" onclick="proceedToPassengerDetails()">Thanh toán</button>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const flightId = params.get('flightId');
+
+      if (!flightId) {
+        const errorEl = document.getElementById('error');
+        errorEl.style.display = 'block';
+        errorEl.textContent = 'Không tìm thấy thông tin chuyến bay!';
+        return;
+      }
+
+      const ticketData = {
+        from: params.get('from'),
+        to: params.get('to'),
+        departDate: params.get('departDate'),
+        seatClass: params.get('seatClass'),
+        adult: parseInt(params.get('adult')) || 1,
+        child: parseInt(params.get('child')) || 0,
+        infant: parseInt(params.get('infant')) || 0
+      };
+
+      try {
+        const response = await fetch(`/api/flights/${flightId}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const flight = await response.json();
+
+        if (flight.error) {
+          const errorEl = document.getElementById('error');
+          errorEl.style.display = 'block';
+          errorEl.textContent = flight.error;
+          return;
+        }
+
+        const departDate = new Date(flight.departureTime);
+        const arrivalDate = new Date(flight.arrivalTime);
+        if (isNaN(departDate.getTime()) || isNaN(arrivalDate.getTime())) {
+          throw new Error('Định dạng ngày giờ từ server không hợp lệ');
+        }
+
+        const formatTime = (date) => {
+          const hours = date.getUTCHours().toString().padStart(2, '0');
+          const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+          return `${hours}:${minutes}`;
+        };
+
+        const months = ['Th01', 'Th02', 'Th03', 'Th04', 'Th05', 'Th06', 'Th07', 'Th08', 'Th09', 'Th10', 'Th11', 'Th12'];
+        const formattedDepartDate = `${departDate.getUTCDate()} ${months[departDate.getUTCMonth()]} ${departDate.getUTCFullYear()}`;
+        const formattedArrivalDate = `${arrivalDate.getUTCDate()} ${months[arrivalDate.getUTCMonth()]} ${arrivalDate.getUTCFullYear()}`;
+
+        document.getElementById('flight-route').innerHTML = `${flight.from || 'N/A'} (${flight.originCode || 'N/A'}) <i class="fas fa-arrow-right"></i> ${flight.to || 'N/A'} (${flight.destCode || 'N/A'})`;
+        document.getElementById('flight-date-time').textContent = `${formattedDepartDate} | ${formatTime(departDate)} - ${formatTime(arrivalDate)} | ${flight.stops || '0 điểm dừng'}`;
+        document.getElementById('airline').textContent = flight.airline || 'N/A';
+        document.getElementById('flight-code').textContent = flight.flightCode || 'N/A';
+        document.getElementById('flight-id').textContent = flight.id || 'N/A';
+        document.getElementById('departure-time').textContent = formatTime(departDate);
+        document.getElementById('departure-date').textContent = formattedDepartDate;
+        document.getElementById('duration').textContent = flight.duration || 'N/A';
+        document.getElementById('arrival-time').textContent = formatTime(arrivalDate);
+        document.getElementById('arrival-date').textContent = formattedArrivalDate;
+        document.getElementById('from-city').textContent = `${flight.from || 'N/A'} (${flight.originCode || 'N/A'})`;
+        document.getElementById('from-airport').textContent = flight.fromAirport || 'Không xác định';
+        document.getElementById('from-gate').textContent = '(' + (flight.fromGate || 'Không xác định') + ')';
+        document.getElementById('to-city').textContent = `${flight.to || 'N/A'} (${flight.destCode || 'N/A'})`;
+        document.getElementById('to-airport').textContent = flight.toAirport || 'Không xác định';
+        document.getElementById('to-gate').textContent = '(' + (flight.toGate || 'Không xác định') + ')';
+
+        // Tính giá
+        const basePrice = flight.price || 0;
+        const taxRate = 0.3;
+        const tax = Math.round(basePrice * taxRate);
+
+        const totalAdultPrice = ticketData.adult * (basePrice + tax);
+        const childBasePrice = Math.round(basePrice * 0.75);
+        const childTax = Math.round(childBasePrice * taxRate);
+        const totalChildPrice = ticketData.child * (childBasePrice + childTax);
+        const totalInfantPrice = 0; // Em bé miễn phí vé và thuế
+
+        const totalPrice = totalAdultPrice + totalChildPrice + totalInfantPrice;
+        const totalPassengers = ticketData.adult + ticketData.child + ticketData.infant;
+
+        // Render price details
+        const priceDetailsEl = document.getElementById('price-details');
+        priceDetailsEl.innerHTML = '';
+
+        if (ticketData.adult > 0) {
+          priceDetailsEl.innerHTML += `
+            <div class="passenger-type">
+              <div class="passenger-type-title">Người lớn x${ticketData.adult}</div>
+              <div class="price-item"><i class="fas fa-circle"></i><span>Giá vé</span> ${ticketData.adult} x ${basePrice.toLocaleString()} ₫</div>
+              <div class="price-item"><i class="fas fa-circle"></i><span>Thuế</span> ${ticketData.adult} x ${tax.toLocaleString()} ₫</div>
+            </div>
+          `;
+        }
+
+        if (ticketData.child > 0) {
+          priceDetailsEl.innerHTML += `
+            <div class="passenger-type">
+              <div class="passenger-type-title">Trẻ em x${ticketData.child}</div>
+              <div class="price-item"><i class="fas fa-circle"></i><span>Giá vé</span> ${ticketData.child} x ${childBasePrice.toLocaleString()} ₫</div>
+              <div class="price-item"><i class="fas fa-circle"></i><span>Thuế</span> ${ticketData.child} x ${childTax.toLocaleString()} ₫</div>
+            </div>
+          `;
+        }
+
+        if (ticketData.infant > 0) {
+          priceDetailsEl.innerHTML += `
+            <div class="passenger-type">
+              <div class="passenger-type-title">Em bé x${ticketData.infant}</div>
+              <div class="price-item"><i class="fas fa-circle"></i><span>Giá vé</span> ${ticketData.infant} x Miễn phí</div>
+              <div class="price-item"><i class="fas fa-circle"></i><span>Thuế</span> ${ticketData.infant} x Miễn phí</div>
+            </div>
+          `;
+        }
+
+        document.getElementById('total-passengers').textContent = `Cho ${totalPassengers} người`;
+        document.getElementById('total-price').textContent = totalPrice.toLocaleString() + ' ₫';
+
+      } catch (error) {
+        const errorEl = document.getElementById('error');
+        errorEl.style.display = 'block';
+        errorEl.textContent = 'Lỗi khi tải thông tin chuyến bay: ' + error.message;
+      }
+    });
+
+    function proceedToPassengerDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const flightId = params.get('flightId');
+      const adult = params.get('adult') || 1;
+      const child = params.get('child') || 0;
+      const infant = params.get('infant') || 0;
+
+      // Chuyển hướng đến passenger_details.html với các tham số
+      window.location.href = `passenger_details.html?flightId=${flightId}&adult=${adult}&child=${child}&infant=${infant}`;
+    }
+  </script>
+</body>
+</html>

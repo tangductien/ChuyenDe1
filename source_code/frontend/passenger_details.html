@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thông Tin Hành Khách</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background: linear-gradient(to bottom, #e60012, #c40010);
+      color: white;
+      padding-bottom: 20px;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px 0;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 20px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .auth-buttons button {
+      background: white;
+      color: #e60012;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .summary-title {
+      max-width: 1200px;
+      margin: 30px auto 10px;
+      padding: 0 20px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .passenger-details-section {
+      flex: 1;
+    }
+
+    .flight-info-section {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .flight-route {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .flight-route i {
+      color: #999;
+    }
+
+    .flight-date-time {
+      font-size: 14px;
+      color: #777;
+    }
+
+    .passenger-info, .contact-info {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .passenger-info h3, .contact-info h3 {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .form-group label span {
+      color: #e60012;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      color: #333;
+    }
+
+    .form-group select.nationality-select, .form-group select.phone-code-select {
+      padding-left: 40px;
+      background: url('https://flagcdn.com/w20/vn.png') no-repeat 10px center,
+                  url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjNjY2IiBkPSJNOCAxMkwzIDcgMiA4bDUgNSA1LTUgMS0xLTUtNXoiLz48L3N2Zz4=') no-repeat right 10px center;
+      background-size: 20px 20px, 12px;
+    }
+
+    .form-group select {
+      appearance: none;
+      background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjNjY2IiBkPSJNOCAxMmwzIDcgMiA4bDUgNSA1LTUgMS0xLTUtNXoiLz48L3N2Zz4=') no-repeat right 10px center;
+      background-size: 12px;
+    }
+
+    .form-group .phone-input {
+      display: flex;
+      gap: 10px;
+    }
+
+    .form-group .phone-input select {
+      width: 160px;
+    }
+
+    .form-group .phone-input input {
+      flex: 1;
+    }
+
+    .price-section {
+      width: 350px;
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .price-section h2 {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .total-price {
+      border-top: 2px solid #eee;
+      padding-top: 10px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .total-price-title-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .total-price-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .total-price-amount {
+      font-size: 20px;
+      font-weight: bold;
+      color: #e60012;
+      text-align: right;
+    }
+
+    .total-price-amount-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .total-price-subtitle {
+      font-size: 13px;
+      color: #777;
+    }
+
+    .terms-text {
+      font-size: 12px;
+      color: #777;
+      text-align: left;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    .terms-text .highlight {
+      color: #e60012;
+    }
+
+    .submit-button {
+      margin-top: 0;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background: #e60012;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .submit-button:hover {
+      background: #c40010;
+    }
+
+    /* Popup styles */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 500px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup h2 {
+      font-size: 24px;
+      color: #e60012;
+      margin-bottom: 20px;
+    }
+
+    .popup p {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .popup .close-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #e60012;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .popup .close-button:hover {
+      background: #c40010;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <div class="header-top">
+        <div class="logo">BDU Air</div>
+        <nav>
+          <ul>
+            <li><a href="#">Vé máy bay</a></li>
+            <li><a href="#">Đơn hàng</a></li>
+          </ul>
+        </nav>
+        <div class="auth-buttons">
+          <button>Đăng nhập</button>
+          <button>Đăng ký</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="summary-title">Thông tin hành khách</div>
+
+  <div class="container">
+    <!-- PASSENGER DETAILS -->
+    <div class="passenger-details-section">
+      <div class="flight-info-section">
+        <div class="flight-route" id="flight-route"></div>
+        <div class="flight-date-time" id="flight-date-time"></div>
+      </div>
+
+      <div id="passenger-forms"></div>
+
+      <div class="contact-info">
+        <h3>Chi tiết liên hệ</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contact-first-name">Tên gọi <span>*</span></label>
+            <input type="text" id="contact-first-name" required />
+          </div>
+          <div class="form-group">
+            <label for="contact-last-name">Họ <span>*</span></label>
+            <input type="text" id="contact-last-name" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contact-gender">Giới tính <span>*</span></label>
+            <select id="contact-gender" required>
+              <option value="">Chọn giới tính</option>
+              <option value="male">Nam</option>
+              <option value="female">Nữ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="contact-email">Email <span>*</span></label>
+            <input type="email" id="contact-email" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contact-phone">Số điện thoại <span>*</span></label>
+            <div class="phone-input">
+              <select id="contact-phone-code" class="phone-code-select" required>
+                <option value="+84">Việt Nam (+84)</option>
+              </select>
+              <input type="tel" id="contact-phone" required />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICE SUMMARY -->
+    <div class="price-section">
+      <h2>Chi tiết giá</h2>
+      <div class="total-price">
+        <div class="total-price-title-container">
+          <div class="total-price-title">Tổng giá</div>
+          <div class="total-price-subtitle" id="total-passengers"></div>
+        </div>
+        <div class="total-price-amount-container">
+          <div class="total-price-amount" id="total-price"></div>
+          <div class="total-price-subtitle">Bao gồm Thuế</div>
+        </div>
+      </div>
+      <div class="terms-text">
+        Bằng cách nhấp vào nút "Tiếp tục", bạn đã đồng ý với <span class="highlight">Các điều khoản và điều kiện</span> của BDU Air.
+      </div>
+      <button class="submit-button" id="submit-button">Tiếp tục</button>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div class="overlay" id="success-popup">
+    <div class="popup">
+      <h2>Thanh toán thành công!</h2>
+      <p id="popup-origin"></p>
+      <p id="popup-destination"></p>
+      <p id="popup-departure"></p>
+      <p id="popup-arrival"></p>
+      <p id="popup-tickets"></p>
+      <p id="popup-total"></p>
+      <button class="close-button" id="close-popup">Đóng</button>
+    </div>
+  </div>
+
+  <script>
+    let flightData = null;
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const flightId = params.get('flightId');
+      const adult = parseInt(params.get('adult')) || 1;
+      const child = parseInt(params.get('child')) || 0;
+      const infant = parseInt(params.get('infant')) || 0;
+
+      if (!flightId) {
+        alert('Không tìm thấy thông tin chuyến bay!');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/flights/${flightId}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const flight = await response.json();
+
+        if (flight.error) {
+          alert(flight.error);
+          return;
+        }
+
+        flightData = flight;
+
+        const departDate = new Date(flight.departureTime);
+        const arrivalDate = new Date(flight.arrivalTime);
+
+        const formatTime = (date) => {
+          const hours = date.getUTCHours().toString().padStart(2, '0');
+          const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+          return `${hours}:${minutes}`;
+        };
+
+        const days = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+        const months = ['Th01', 'Th02', 'Th03', 'Th04', 'Th05', 'Th06', 'Th07', 'Th08', 'Th09', 'Th10', 'Th11', 'Th12'];
+        const formattedDepartDate = `${departDate.getUTCDate()} ${months[departDate.getUTCMonth()]} ${departDate.getUTCFullYear()}`;
+        const formattedArrivalDate = `${arrivalDate.getUTCDate()} ${months[arrivalDate.getUTCMonth()]} ${arrivalDate.getUTCFullYear()}`;
+
+        document.getElementById('flight-route').innerHTML = `${flight.from} (${flight.originCode}) <i class="fas fa-arrow-right"></i> ${flight.to} (${flight.destCode})`;
+        document.getElementById('flight-date-time').textContent = `${days[departDate.getDay()]}, ${formattedDepartDate} ${formatTime(departDate)} - ${formatTime(arrivalDate)} | Bay thẳng`;
+
+        // Tính giá
+        const basePrice = flight.price || 0;
+        const taxRate = 0.3;
+        const tax = Math.round(basePrice * taxRate);
+
+        const totalAdultPrice = adult * (basePrice + tax);
+        const childBasePrice = Math.round(basePrice * 0.75);
+        const childTax = Math.round(childBasePrice * taxRate);
+        const totalChildPrice = child * (childBasePrice + childTax);
+        const totalInfantPrice = 0;
+
+        const totalPrice = totalAdultPrice + totalChildPrice + totalInfantPrice;
+        const totalPassengers = adult + child + infant;
+
+        document.getElementById('total-passengers').textContent = `Cho ${totalPassengers} người`;
+        document.getElementById('total-price').textContent = totalPrice.toLocaleString() + ' ₫';
+
+        // Tạo form cho hành khách
+        const passengerFormsEl = document.getElementById('passenger-forms');
+        let adultIndex = 0, childIndex = 0, infantIndex = 0;
+
+        const createPassengerForm = (type, count, indexRef, typeKey) => {
+          for (let i = 0; i < count; i++) {
+            indexRef++;
+            const form = document.createElement('div');
+            form.className = 'passenger-info';
+            form.dataset.passengerType = typeKey;
+            form.dataset.passengerIndex = indexRef;
+            form.innerHTML = `
+              <h3>${type} ${indexRef}</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="passenger-${typeKey}-${indexRef}-first-name">Tên gọi <span>*</span></label>
+                  <input type="text" id="passenger-${typeKey}-${indexRef}-first-name" required />
+                </div>
+                <div class="form-group">
+                  <label for="passenger-${typeKey}-${indexRef}-last-name">Họ <span>*</span></label>
+                  <input type="text" id="passenger-${typeKey}-${indexRef}-last-name" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="passenger-${typeKey}-${indexRef}-gender">Giới tính <span>*</span></label>
+                  <select id="passenger-${typeKey}-${indexRef}-gender" required>
+                    <option value="">Chọn giới tính</option>
+                    <option value="male">Nam</option>
+                    <option value="female">Nữ</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="passenger-${typeKey}-${indexRef}-dob">Ngày sinh <span>*</span></label>
+                  <input type="date" id="passenger-${typeKey}-${indexRef}-dob" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="passenger-${typeKey}-${indexRef}-nationality">Quốc tịch <span>*</span></label>
+                  <select id="passenger-${typeKey}-${indexRef}-nationality" class="nationality-select" required>
+                    <option value="VN">Việt Nam</option>
+                  </select>
+                </div>
+              </div>
+            `;
+            passengerFormsEl.appendChild(form);
+          }
+        };
+
+        if (adult > 0) createPassengerForm('Người lớn', adult, adultIndex, 'adult');
+        if (child > 0) createPassengerForm('Trẻ em', child, childIndex, 'child');
+        if (infant > 0) createPassengerForm('Em bé', infant, infantIndex, 'infant');
+
+        // Load saved form data
+        loadFormData();
+
+        // Save form data on input change
+        document.querySelectorAll('input, select').forEach(field => {
+          field.addEventListener('change', () => {
+            saveFormData();
+          });
+        });
+
+        // Xử lý sự kiện nhấn nút "Tiếp tục"
+        document.getElementById('submit-button').addEventListener('click', async () => {
+          // Kiểm tra tính hợp lệ của các form
+          if (!validateForm()) {
+            alert('Vui lòng điền đầy đủ thông tin bắt buộc.');
+            return;
+          }
+
+          // Thu thập thông tin hành khách
+          const passengers = [];
+          const passengerForms = document.querySelectorAll('.passenger-info');
+          passengerForms.forEach(form => {
+            const typeKey = form.dataset.passengerType;
+            const index = form.dataset.passengerIndex;
+            const firstName = document.getElementById(`passenger-${typeKey}-${index}-first-name`)?.value;
+            const lastName = document.getElementById(`passenger-${typeKey}-${index}-last-name`)?.value;
+            const gender = document.getElementById(`passenger-${typeKey}-${index}-gender`)?.value;
+            const dob = document.getElementById(`passenger-${typeKey}-${index}-dob`)?.value;
+            const nationality = document.getElementById(`passenger-${typeKey}-${index}-nationality`)?.value;
+
+            if (firstName && lastName && gender && dob && nationality) {
+              passengers.push({
+                first_name: firstName,
+                last_name: lastName,
+                gender: gender,
+                date_of_birth: dob,
+                nationality: nationality
+              });
+            }
+          });
+
+          // Lấy thông tin liên hệ
+          const contactEmail = document.getElementById('contact-email').value;
+          const contactPhone = document.getElementById('contact-phone-code').value + document.getElementById('contact-phone').value;
+
+          const bookingData = {
+            flight_id: flightId,
+            total_tickets: totalPassengers,
+            total_amount: totalPrice,
+            origin_city: flight.from,
+            destination_city: flight.to,
+            departure_time: flight.departureTime,
+            arrival_time: flight.arrivalTime,
+            contact_email: contactEmail,
+            contact_phone: contactPhone,
+            passengers: passengers
+          };
+
+          try {
+            const response = await fetch('/api/bookings', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(bookingData)
+            });
+
+            const result = await response.json();
+            if (result.error) {
+              alert(result.error);
+              return;
+            }
+
+            // Hiển thị popup
+            const popup = document.getElementById('success-popup');
+            document.getElementById('popup-origin').textContent = `Điểm đi: ${flightData.from}`;
+            document.getElementById('popup-destination').textContent = `Điểm đến: ${flightData.to}`;
+            document.getElementById('popup-departure').textContent = `Giờ đi: ${new Date(flightData.departureTime).toLocaleString()}`;
+            document.getElementById('popup-arrival').textContent = `Giờ đến: ${new Date(flightData.arrivalTime).toLocaleString()}`;
+            document.getElementById('popup-tickets').textContent = `Số vé: ${totalPassengers}`;
+            document.getElementById('popup-total').textContent = `Tổng tiền: ${totalPrice.toLocaleString()} ₫`;
+            document.getElementById('success-popup').style.display = 'flex';
+
+            // Đóng popup và xóa localStorage
+            document.getElementById('close-popup').addEventListener('click', () => {
+              document.getElementById('success-popup').style.display = 'none';
+              localStorage.removeItem('passengerFormData'); // Xóa dữ liệu sau khi đặt vé thành công
+            });
+          } catch (error) {
+            alert('Lỗi khi đặt vé: ' + error.message);
+          }
+        });
+
+      } catch (error) {
+        alert('Lỗi khi tải thông tin: ' + error.message);
+      }
+    });
+
+    function validateForm() {
+      let isValid = true;
+      const requiredFields = document.querySelectorAll(
+        '.passenger-info input[required], .passenger-info select[required], .contact-info input[required], .contact-info select[required]'
+      );
+
+      requiredFields.forEach((field) => {
+        if (!field.value.trim()) {
+          field.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          field.style.borderColor = '#ddd'; // reset
+        }
+      });
+
+      return isValid;
+    }
+
+    function saveFormData() {
+      const formData = {};
+      document.querySelectorAll('input, select').forEach(field => {
+        if (field.id) {
+          formData[field.id] = field.value;
+        }
+      });
+      localStorage.setItem('passengerFormData', JSON.stringify(formData));
+    }
+
+    function loadFormData() {
+      const savedData = localStorage.getItem('passengerFormData');
+      if (savedData) {
+        const formData = JSON.parse(savedData);
+        Object.keys(formData).forEach(id => {
+          const field = document.getElementById(id);
+          if (field) {
+            field.value = formData[id];
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
