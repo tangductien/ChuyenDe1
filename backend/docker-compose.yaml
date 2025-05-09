@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./uploads:/app/uploads     # Mount thư mục ảnh
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    external: true    # Nếu muốn tự tạo mạng, nên để false

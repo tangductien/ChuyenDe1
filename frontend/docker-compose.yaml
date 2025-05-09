@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+    environment:
+      - BACKEND_HOST=backend
+      - BACKEND_PORT=3000
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+networks:
+  app-network:
+    external: true
+

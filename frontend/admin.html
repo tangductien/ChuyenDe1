@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản Trị - BDU Air</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(to bottom, #e60012, #c40010);
+      color: white;
+      padding: 20px 0;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .auth-buttons button {
+      background: white;
+      color: #e60012;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 20px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .sidebar h3 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      margin-bottom: 10px;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar ul li a:hover {
+      color: #e60012;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .main-content h2 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #f9f9f9;
+      font-weight: bold;
+    }
+
+    td button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+
+    .edit-btn {
+      background: #e60012;
+      color: white;
+    }
+
+    .delete-btn {
+      background: #666;
+      color: white;
+    }
+
+    /* Form */
+    .form-container {
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    .form-container.active {
+      display: block;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      flex: 1;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .form-actions button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .save-btn {
+      background: #e60012;
+      color: white;
+    }
+
+    .cancel-btn {
+      background: #666;
+      color: white;
+    }
+
+    /* Filter Section */
+    .filter-container {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .filter-group label {
+      display: block;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .filter-group input, .filter-group select {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    /* Chart Section */
+    .chart-container {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+
+    .chart-container canvas {
+      max-width: 100%;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .filter-row, .form-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <div class="logo">BDU Air - Quản Trị</div>
+      <div class="auth-buttons">
+        <button onclick="logout()">Đăng xuất</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Menu Quản Lý</h3>
+      <ul>
+        <li><a href="#" onclick="showSection('flights')"><i class="fas fa-plane"></i> Chuyến Bay</a></li>
+        <li><a href="#" onclick="showSection('bookings')"><i class="fas fa-ticket-alt"></i> Đơn Hàng</a></li>
+        <li><a href="#" onclick="showSection('users')"><i class="fas fa-users"></i> Người Dùng</a></li>
+        <li><a href="#" onclick="showSection('statistics')"><i class="fas fa-chart-pie"></i> Thống Kê</a></li>
+        <li><a href="#" onclick="showSection('suggestions')"><i class="fas fa-star"></i> Chuyến Bay Đề Xuất</a></li>
+        <li><a href="#" onclick="showSection('reports')"><i class="fas fa-chart-bar"></i> Báo Cáo</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Flights Section -->
+      <div id="flights-section" class="section">
+        <h2>Quản Lý Chuyến Bay</h2>
+        <div class="filter-container">
+          <h3>Lọc Chuyến Bay</h3>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label for="filter-start-date">Từ Ngày</label>
+              <input type="date" id="filter-start-date" />
+            </div>
+            <div class="filter-group">
+              <label for="filter-end-date">Đến Ngày</label>
+              <input type="date" id="filter-end-date" />
+            </div>
+            <div class="filter-group">
+              <label for="filter-origin">Điểm Khởi Hành</label>
+              <select id="filter-origin"></select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-destination">Điểm Đến</label>
+              <select id="filter-destination"></select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-airline">Hãng Bay</label>
+              <select id="filter-airline"></select>
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button class="save-btn" onclick="applyFlightFilters()">Áp Dụng</button>
+            <button class="cancel-btn" onclick="resetFlightFilters()">Xóa Bộ Lọc</button>
+          </div>
+        </div>
+        <button class="save-btn" onclick="showFlightForm()">Thêm Chuyến Bay</button>
+        <div id="flight-form" class="form-container">
+          <h3>Thêm/Sửa Chuyến Bay</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="flight-code">Mã Chuyến Bay</label>
+              <input type="text" id="flight-code" required />
+            </div>
+            <div class="form-group">
+              <label for="airline-id">Hãng Hàng Không</label>
+              <select id="airline-id" required></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="origin-airport">Sân Bay Đi</label>
+              <select id="origin-airport" required></select>
+            </div>
+            <div class="form-group">
+              <label for="destination-airport">Sân Bay Đến</label>
+              <select id="destination-airport" required></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="departure-time">Thời Gian Đi</label>
+              <input type="datetime-local" id="departure-time" required />
+            </div>
+            <div class="form-group">
+              <label for="arrival-time">Thời Gian Đến</label>
+              <input type="datetime-local" id="arrival-time" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="total-seats">Tổng Ghế</label>
+              <input type="number" id="total-seats" required />
+            </div>
+            <div class="form-group">
+              <label for="price">Giá Vé</label>
+              <input type="number" id="price" required />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="save-btn" onclick="saveFlight()">Lưu</button>
+            <button class="cancel-btn" onclick="hideFlightForm()">Hủy</button>
+          </div>
+        </div>
+        <table id="flights-table">
+          <thead>
+            <tr>
+              <th>Mã</th>
+              <th>Hãng</th>
+              <th>Từ</th>
+              <th>Đến</th>
+              <th>Thời Gian</th>
+              <th>Giá</th>
+              <th>Hành Động</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Bookings Section -->
+      <div id="bookings-section" class="section" style="display: none;">
+        <h2>Quản Lý Đơn Hàng</h2>
+        <table id="bookings-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Từ</th>
+              <th>Đến</th>
+              <th>Số Vé</th>
+              <th>Tổng Tiền</th>
+              <th>Trạng Thái</th>
+              <th>Hành Động</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Users Section -->
+      <div id="users-section" class="section" style="display: none;">
+        <h2>Quản Lý Người Dùng</h2>
+        <button class="save-btn" onclick="showUserForm()">Thêm Người Dùng</button>
+        <div id="user-form" class="form-container">
+          <h3>Thêm/Sửa Người Dùng</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="username">Tên Đăng Nhập</label>
+              <input type="text" id="username" required />
+            </div>
+            <div class="form-group">
+              <label for="password">Mật Khẩu</label>
+              <input type="password" id="password" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="full-name">Họ Tên</label>
+              <input type="text" id="full-name" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Số Điện Thoại</label>
+              <input type="tel" id="phone" required />
+            </div>
+            <div class="form-group">
+              <label for="role">Vai Trò</label>
+              <select id="role" required>
+                <option value="user">Người Dùng</option>
+                <option value="admin">Quản Trị</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="save-btn" onclick="saveUser()">Lưu</button>
+            <button class="cancel-btn" onclick="hideUserForm()">Hủy</button>
+          </div>
+        </div>
+        <table id="users-table">
+          <thead>
+            <tr>
+              <th>Tên Đăng Nhập</th>
+              <th>Họ Tên</th>
+              <th>Email</th>
+              <th>Vai Trò</th>
+              <th>Hành Động</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Statistics Section -->
+      <div id="statistics-section" class="section" style="display: none;">
+        <h2>Thống Kê</h2>
+        <div class="filter-container">
+          <h3>Chọn Năm</h3>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label for="stats-year">Năm</label>
+              <select id="stats-year">
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button class="save-btn" onclick="loadStatistics()">Áp Dụng</button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <h3>Doanh Thu Theo Tháng</h3>
+          <canvas id="revenue-chart"></canvas>
+        </div>
+        <div class="chart-container">
+          <h3>Số Vé Bán Được Theo Tháng</h3>
+          <canvas id="tickets-chart"></canvas>
+        </div>
+        <div class="chart-container">
+          <h3>Điểm Đến Phổ Biến</h3>
+          <canvas id="destinations-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Suggested Flights Section -->
+      <div id="suggestions-section" class="section" style="display: none;">
+        <h2>Chuyến Bay Đề Xuất</h2>
+        <button class="save-btn" onclick="showSuggestionForm()">Thêm Chuyến Bay Đề Xuất</button>
+        <div id="suggestion-form" class="form-container">
+          <h3>Thêm/Sửa Chuyến Bay Đề Xuất</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="suggestion-origin">Điểm Khởi Hành</label>
+              <input type="text" id="suggestion-origin" required />
+            </div>
+            <div class="form-group">
+              <label for="suggestion-destination">Điểm Đến</label>
+              <input type="text" id="suggestion-destination" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="suggestion-image">URL Hình Ảnh</label>
+              <input type="text" id="suggestion-image" />
+            </div>
+            <div class="form-group">
+              <label for="suggestion-price">Giá Vé</label>
+              <input type="number" id="suggestion-price" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="suggestion-order">Thứ Tự Hiển Thị</label>
+              <input type="number" id="suggestion-order" required />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="save-btn" onclick="saveSuggestion()">Lưu</button>
+            <button class="cancel-btn" onclick="hideSuggestionForm()">Hủy</button>
+          </div>
+        </div>
+        <table id="suggestions-table">
+          <thead>
+            <tr>
+              <th>Điểm Đi</th>
+              <th>Điểm Đến</th>
+              <th>Giá</th>
+              <th>Thứ Tự</th>
+              <th>Hành Động</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Reports Section -->
+      <div id="reports-section" class="section" style="display: none;">
+        <h2>Quản Lý Báo Cáo</h2>
+        <button class="save-btn" onclick="showReportForm()">Thêm Báo Cáo</button>
+        <div id="report-form" class="form-container">
+          <h3>Thêm/Sửa Báo Cáo</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="report-title">Tiêu Đề</label>
+              <input type="text" id="report-title" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="report-content">Nội Dung</label>
+              <textarea id="report-content" required></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="save-btn" onclick="saveReport()">Lưu</button>
+            <button class="cancel-btn" onclick="hideReportForm()">Hủy</button>
+          </div>
+        </div>
+        <table id="reports-table">
+          <thead>
+            <tr>
+              <th>Tiêu Đề</th>
+              <th>Người Tạo</th>
+              <th>Thời Gian</th>
+              <th>Hành Động</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentFlightId = null;
+    let currentUserId = null;
+    let currentReportId = null;
+    let currentSuggestionId = null;
+    let charts = {
+      revenue: null,
+      tickets: null,
+      destinations: null
+    };
+
+    // Hiển thị section
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+      document.getElementById(`${section}-section`).style.display = 'block';
+      loadData(section);
+    }
+
+    // Load dữ liệu
+    async function loadData(section) {
+      try {
+        let endpoint;
+        switch (section) {
+          case 'flights':
+            endpoint = '/api/admin/flights';
+            const [airlines, airports] = await Promise.all([
+              fetch('/api/admin/airlines').then(res => res.json()),
+              fetch('/api/admin/airports').then(res => res.json())
+            ]);
+            populateSelect('airline-id', airlines, 'id', 'airline_name');
+            populateSelect('origin-airport', airports, 'id', 'name');
+            populateSelect('destination-airport', airports, 'id', 'name');
+            populateSelect('filter-airline', airlines, 'id', 'airline_name');
+            populateSelect('filter-origin', airports, 'id', 'name');
+            populateSelect('filter-destination', airports, 'id', 'name');
+            document.getElementById('filter-airline').innerHTML = '<option value="">Tất cả</option>' + document.getElementById('filter-airline').innerHTML;
+            document.getElementById('filter-origin').innerHTML = '<option value="">Tất cả</option>' + document.getElementById('filter-origin').innerHTML;
+            document.getElementById('filter-destination').innerHTML = '<option value="">Tất cả</option>' + document.getElementById('filter-destination').innerHTML;
+            break;
+          case 'bookings':
+            endpoint = '/api/admin/bookings';
+            break;
+          case 'users':
+            endpoint = '/api/admin/users';
+            break;
+          case 'statistics':
+            await loadStatistics();
+            return;
+          case 'suggestions':
+            endpoint = '/api/admin/suggestions';
+            break;
+          case 'reports':
+            endpoint = '/api/admin/reports';
+            break;
+        }
+
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        renderTable(section, data);
+      } catch (err) {
+        alert('Lỗi khi tải dữ liệu: ' + err.message);
+      }
+    }
+
+    // Điền dữ liệu vào select
+    function populateSelect(id, items, valueKey, textKey) {
+      const select = document.getElementById(id);
+      select.innerHTML = '';
+      items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item[valueKey];
+        option.textContent = item[textKey];
+        select.appendChild(option);
+      });
+    }
+
+    // Render bảng
+    function renderTable(section, data) {
+      const tbody = document.getElementById(`${section}-table`).querySelector('tbody');
+      tbody.innerHTML = '';
+
+      data.forEach(item => {
+        const row = document.createElement('tr');
+        switch (section) {
+          case 'flights':
+            row.innerHTML = `
+              <td>${item.flight_code}</td>
+              <td>${item.airline_name}</td>
+              <td>${item.origin_city}</td>
+              <td>${item.destination_city}</td>
+              <td>${new Date(item.departure_time).toLocaleString()}</td>
+              <td>${item.price.toLocaleString()} ₫</td>
+              <td>
+                <button class="edit-btn" onclick="editFlight(${item.id})">Sửa</button>
+                <button class="delete-btn" onclick="deleteFlight(${item.id})">Xóa</button>
+              </td>
+            `;
+            break;
+          case 'bookings':
+            row.innerHTML = `
+              <td>${item.id}</td>
+              <td>${item.origin_city}</td>
+              <td>${item.destination_city}</td>
+              <td>${item.total_tickets}</td>
+              <td>${item.total_amount.toLocaleString()} ₫</td>
+              <td>
+                <select onchange="updateBookingStatus(${item.id}, this.value)">
+                  <option value="pending" ${item.status === 'pending' ? 'selected' : ''}>Chờ</option>
+                  <option value="confirmed" ${item.status === 'confirmed' ? 'selected' : ''}>Xác Nhận</option>
+                  <option value="cancelled" ${item.status === 'cancelled' ? 'selected' : ''}>Hủy</option>
+                </select>
+              </td>
+              <td>
+                <button class="delete-btn" onclick="deleteBooking(${item.id})">Xóa</button>
+              </td>
+            `;
+            break;
+          case 'users':
+            row.innerHTML = `
+              <td>${item.username}</td>
+              <td>${item.full_name}</td>
+              <td>${item.email}</td>
+              <td>${item.role === 'admin' ? 'Quản Trị' : 'Người Dùng'}</td>
+              <td>
+                <button class="edit-btn" onclick="editUser(${item.id})">Sửa</button>
+                <button class="delete-btn" onclick="deleteUser(${item.id})">Xóa</button>
+              </td>
+            `;
+            break;
+          case 'suggestions':
+            row.innerHTML = `
+              <td>${item.origin_city_name}</td>
+              <td>${item.destination_city_name}</td>
+              <td>${item.price.toLocaleString()} ₫</td>
+              <td>${item.display_order}</td>
+              <td>
+                <button class="edit-btn" onclick="editSuggestion(${item.id})">Sửa</button>
+                <button class="delete-btn" onclick="deleteSuggestion(${item.id})">Xóa</button>
+              </td>
+            `;
+            break;
+          case 'reports':
+            row.innerHTML = `
+              <td>${item.title}</td>
+              <td>${item.created_by_name}</td>
+              <td>${new Date(item.created_at).toLocaleString()}</td>
+              <td>
+                <button class="edit-btn" onclick="editReport(${item.id})">Sửa</button>
+                <button class="delete-btn" onclick="deleteReport(${item.id})">Xóa</button>
+              </td>
+            `;
+            break;
+        }
+        tbody.appendChild(row);
+      });
+    }
+
+    // Lọc chuyến bay
+    async function applyFlightFilters() {
+      try {
+        const startDate = document.getElementById('filter-start-date').value;
+        const endDate = document.getElementById('filter-end-date').value;
+        const origin = document.getElementById('filter-origin').value;
+        const destination = document.getElementById('filter-destination').value;
+        const airline = document.getElementById('filter-airline').value;
+
+        let query = '/api/admin/flights?';
+        const params = [];
+        if (startDate) params.push(`startDate=${startDate}`);
+        if (endDate) params.push(`endDate=${endDate}`);
+        if (origin) params.push(`origin=${origin}`);
+        if (destination) params.push(`destination=${destination}`);
+        if (airline) params.push(`airline=${airline}`);
+
+        query += params.join('&');
+
+        const response = await fetch(query);
+        const data = await response.json();
+        renderTable('flights', data);
+      } catch (err) {
+        alert('Lỗi khi lọc chuyến bay: ' + err.message);
+      }
+    }
+
+    function resetFlightFilters() {
+      document.getElementById('filter-start-date').value = '';
+      document.getElementById('filter-end-date').value = '';
+      document.getElementById('filter-origin').value = '';
+      document.getElementById('filter-destination').value = '';
+      document.getElementById('filter-airline').value = '';
+      loadData('flights');
+    }
+
+    // Thống kê
+    async function loadStatistics() {
+      try {
+        const year = document.getElementById('stats-year').value || '2025';
+
+        // Fetch dữ liệu từ API
+        const [revenueRes, ticketsRes, destinationsRes] = await Promise.all([
+          fetch(`/api/admin/statistics/revenue?year=${year}`).then(res => res.json()),
+          fetch(`/api/admin/statistics/tickets?year=${year}`).then(res => res.json()),
+          fetch(`/api/admin/statistics/destinations?year=${year}`).then(res => res.json())
+        ]);
+
+        // Destroy existing charts to prevent canvas reuse error
+        if (charts.revenue) charts.revenue.destroy();
+        if (charts.tickets) charts.tickets.destroy();
+        if (charts.destinations) charts.destinations.destroy();
+
+        // Prepare revenue data
+        const revenueData = {
+          labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+          datasets: [{
+            label: `Doanh Thu (triệu VND) ${year}`,
+            data: revenueRes.data.map(item => item.total / 1_000_000), // Convert to million VND
+            backgroundColor: 'rgba(230, 0, 18, 0.5)',
+            borderColor: '#e60012',
+            borderWidth: 1
+          }]
+        };
+
+        // Prepare tickets data
+        const ticketsData = {
+          labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+          datasets: [{
+            label: `Số Vé ${year}`,
+            data: ticketsRes.data.map(item => item.tickets),
+            backgroundColor: 'rgba(0, 123, 255, 0.5)',
+            borderColor: '#007bff',
+            borderWidth: 1
+          }]
+        };
+
+        // Prepare destinations data
+        const destinationsData = {
+          labels: destinationsRes.data.map(item => item.city_name),
+          datasets: [{
+            label: `Số Lượt Đặt ${year}`,
+            data: destinationsRes.data.map(item => item.bookings),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.5)',
+              'rgba(255, 206, 86, 0.5)',
+              'rgba(75, 192, 192, 0.5)',
+              'rgba(153, 102, 255, 0.5)'
+            ],
+            borderColor: [
+              '#ff6384',
+              '#36a2eb',
+              '#ffce56',
+              '#4bc0c0',
+              '#9966ff'
+            ],
+            borderWidth: 1
+          }]
+        };
+
+        // Create new charts
+        charts.revenue = new Chart(document.getElementById('revenue-chart'), {
+          type: 'bar',
+          data: revenueData,
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Triệu VND'
+                }
+              }
+            }
+          }
+        });
+
+        charts.tickets = new Chart(document.getElementById('tickets-chart'), {
+          type: 'line',
+          data: ticketsData,
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Số Vé'
+                }
+              }
+            }
+          }
+        });
+
+        charts.destinations = new Chart(document.getElementById('destinations-chart'), {
+          type: 'doughnut',
+          data: destinationsData
+        });
+      } catch (err) {
+        alert('Lỗi khi tải thống kê: ' + err.message);
+      }
+    }
+
+    // Chuyến bay
+    function showFlightForm() {
+      document.getElementById('flight-form').classList.add('active');
+    }
+
+    function hideFlightForm() {
+      document.getElementById('flight-form').classList.remove('active');
+      currentFlightId = null;
+      document.getElementById('flight-form').querySelectorAll('input, select').forEach(field => field.value = '');
+    }
+
+    async function saveFlight() {
+      const data = {
+        flight_code: document.getElementById('flight-code').value,
+        airline_id: document.getElementById('airline-id').value,
+        origin_airport: document.getElementById('origin-airport').value,
+        destination_airport: document.getElementById('destination-airport').value,
+        departure_time: document.getElementById('departure-time').value,
+        arrival_time: document.getElementById('arrival-time').value,
+        total_seats: document.getElementById('total-seats').value,
+        price: document.getElementById('price').value
+      };
+
+      try {
+        const response = await fetch(currentFlightId ? `/api/admin/flights/${currentFlightId}` : '/api/admin/flights', {
+          method: currentFlightId ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.error) {
+          alert(result.error);
+          return;
+        }
+        hideFlightForm();
+        loadData('flights');
+      } catch (err) {
+        alert('Lỗi khi lưu chuyến bay: ' + err.message);
+      }
+    }
+
+    async function editFlight(id) {
+      try {
+        const response = await fetch(`/api/admin/flights/${id}`);
+        const flight = await response.json();
+        currentFlightId = id;
+        document.getElementById('flight-code').value = flight.flight_code;
+        document.getElementById('airline-id').value = flight.airline_id;
+        document.getElementById('origin-airport').value = flight.origin_airport;
+        document.getElementById('destination-airport').value = flight.destination_airport;
+        document.getElementById('departure-time').value = flight.departure_time.slice(0, 16);
+        document.getElementById('arrival-time').value = flight.arrival_time.slice(0, 16);
+        document.getElementById('total-seats').value = flight.total_seats;
+        document.getElementById('price').value = flight.price;
+        showFlightForm();
+      } catch (err) {
+        alert('Lỗi khi tải thông tin chuyến bay: ' + err.message);
+      }
+    }
+
+    async function deleteFlight(id) {
+      if (confirm('Bạn có chắc muốn xóa chuyến bay này?')) {
+        try {
+          const response = await fetch(`/api/admin/flights/${id}`, { method: 'DELETE' });
+          const result = await response.json();
+          if (result.error) {
+            alert(result.error);
+            return;
+          }
+          loadData('flights');
+        } catch (err) {
+          alert('Lỗi khi xóa chuyến bay: ' + err.message);
+        }
+      }
+    }
+
+    // Đơn hàng
+    async function updateBookingStatus(id, status) {
+      try {
+        const response = await fetch(`/api/admin/bookings/${id}/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        const result = await response.json();
+        if (result.error) {
+          alert(result.error);
+          return;
+        }
+        loadData('bookings');
+      } catch (err) {
+        alert('Lỗi khi cập nhật trạng thái: ' + err.message);
+      }
+    }
+
+    async function deleteBooking(id) {
+      if (confirm('Bạn có chắc muốn xóa đơn hàng này?')) {
+        try {
+          const response = await fetch(`/api/admin/bookings/${id}`, { method: 'DELETE' });
+          const result = await response.json();
+          if (result.error) {
+            alert(result.error);
+            return;
+          }
+          loadData('bookings');
+        } catch (err) {
+          alert('Lỗi khi xóa đơn hàng: ' + err.message);
+        }
+      }
+    }
+
+    // Người dùng
+    function showUserForm() {
+      document.getElementById('user-form').classList.add('active');
+    }
+
+    function hideUserForm() {
+      document.getElementById('user-form').classList.remove('active');
+      currentUserId = null;
+      document.getElementById('user-form').querySelectorAll('input, select').forEach(field => field.value = '');
+    }
+
+    async function saveUser() {
+      const data = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+        full_name: document.getElementById('full-name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        role: document.getElementById('role').value
+      };
+
+      try {
+        const response = await fetch(currentUserId ? `/api/admin/users/${currentUserId}` : '/api/admin/users', {
+          method: currentUserId ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.error) {
+          alert(result.error);
+          return;
+        }
+        hideUserForm();
+        loadData('users');
+      } catch (err) {
+        alert('Lỗi khi lưu người dùng: ' + err.message);
+      }
+    }
+
+    async function editUser(id) {
+      try {
+        const response = await fetch(`/api/admin/users/${id}`);
+        const user = await response.json();
+        currentUserId = id;
+        document.getElementById('username').value = user.username;
+        document.getElementById('password').value = '';
+        document.getElementById('full-name').value = user.full_name;
+        document.getElementById('email').value = user.email;
+        document.getElementById('phone').value = user.phone;
+        document.getElementById('role').value = user.role;
+        showUserForm();
+      } catch (err) {
+        alert('Lỗi khi tải thông tin người dùng: ' + err.message);
+      }
+    }
+
+    async function deleteUser(id) {
+      if (confirm('Bạn có chắc muốn xóa người dùng này?')) {
+        try {
+          const response = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+          const result = await response.json();
+          if (result.error) {
+            alert(result.error);
+            return;
+          }
+          loadData('users');
+        } catch (err) {
+          alert('Lỗi khi xóa người dùng: ' + err.message);
+        }
+      }
+    }
+
+    // Chuyến bay đề xuất
+    function showSuggestionForm() {
+      document.getElementById('suggestion-form').classList.add('active');
+    }
+
+    function hideSuggestionForm() {
+      document.getElementById('suggestion-form').classList.remove('active');
+      currentSuggestionId = null;
+      document.getElementById('suggestion-form').querySelectorAll('input').forEach(field => field.value = '');
+    }
+
+    async function saveSuggestion() {
+      const data = {
+        origin_city_name: document.getElementById('suggestion-origin').value,
+        destination_city_name: document.getElementById('suggestion-destination').value,
+        image_url: document.getElementById('suggestion-image').value,
+        price: document.getElementById('suggestion-price').value,
+        display_order: document.getElementById('suggestion-order').value
+      };
+
+      try {
+        const response = await fetch(currentSuggestionId ? `/api/admin/suggestions/${currentSuggestionId}` : '/api/admin/suggestions', {
+          method: currentSuggestionId ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.error) {
+          alert(result.error);
+          return;
+        }
+        hideSuggestionForm();
+        loadData('suggestions');
+      } catch (err) {
+        alert('Lỗi khi lưu chuyến bay đề xuất: ' + err.message);
+      }
+    }
+
+    async function editSuggestion(id) {
+      try {
+        const response = await fetch(`/api/admin/suggestions/${id}`);
+        const suggestion = await response.json();
+        currentSuggestionId = id;
+        document.getElementById('suggestion-origin').value = suggestion.origin_city_name;
+        document.getElementById('suggestion-destination').value = suggestion.destination_city_name;
+        document.getElementById('suggestion-image').value = suggestion.image_url;
+        document.getElementById('suggestion-price').value = suggestion.price;
+        document.getElementById('suggestion-order').value = suggestion.display_order;
+        showSuggestionForm();
+      } catch (err) {
+        alert('Lỗi khi tải thông tin chuyến bay đề xuất: ' + err.message);
+      }
+    }
+
+    async function deleteSuggestion(id) {
+      if (confirm('Bạn có chắc muốn xóa chuyến bay đề xuất này?')) {
+        try {
+          const response = await fetch(`/api/admin/suggestions/${id}`, { method: 'DELETE' });
+          const result = await response.json();
+          if (result.error) {
+            alert(result.error);
+            return;
+          }
+          loadData('suggestions');
+        } catch (err) {
+          alert('Lỗi khi xóa chuyến bay đề xuất: ' + err.message);
+        }
+      }
+    }
+
+    // Báo cáo
+    function showReportForm() {
+      document.getElementById('report-form').classList.add('active');
+    }
+
+    function hideReportForm() {
+      document.getElementById('report-form').classList.remove('active');
+      currentReportId = null;
+      document.getElementById('report-form').querySelectorAll('input, textarea').forEach(field => field.value = '');
+    }
+
+    async function saveReport() {
+      const data = {
+        title: document.getElementById('report-title').value,
+        content: document.getElementById('report-content').value
+      };
+
+      try {
+        const response = await fetch(currentReportId ? `/api/admin/reports/${currentReportId}` : '/api/admin/reports', {
+          method: currentReportId ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.error) {
+          alert(result.error);
+          return;
+        }
+        hideReportForm();
+        loadData('reports');
+      } catch (err) {
+        alert('Lỗi khi lưu báo cáo: ' + err.message);
+      }
+    }
+
+    async function editReport(id) {
+      try {
+        const response = await fetch(`/api/admin/reports/${id}`);
+        const report = await response.json();
+        currentReportId = id;
+        document.getElementById('report-title').value = report.title;
+        document.getElementById('report-content').value = report.content;
+        showReportForm();
+      } catch (err) {
+        alert('Lỗi khi tải thông tin báo cáo: ' + err.message);
+      }
+    }
+
+    async function deleteReport(id) {
+      if (confirm('Bạn có chắc muốn xóa báo cáo này?')) {
+        try {
+          const response = await fetch(`/api/admin/reports/${id}`, { method: 'DELETE' });
+          const result = await response.json();
+          if (result.error) {
+            alert(result.error);
+            return;
+          }
+          loadData('reports');
+        } catch (err) {
+          alert('Lỗi khi xóa báo cáo: ' + err.message);
+        }
+      }
+    }
+
+    // Đăng xuất
+    function logout() {
+      window.location.href = '/login';
+    }
+
+    // Khởi tạo
+    showSection('flights');
+  </script>
+</body>
+</html>

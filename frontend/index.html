@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Đặt Vé Máy Bay</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+    }
+
+    header {
+      background: linear-gradient(to bottom, #e60012, #c40010);
+      color: white;
+      padding-bottom: 50px;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px 0;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 20px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .auth-buttons button {
+      background: white;
+      color: #e60012;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .header-subtitle {
+      font-size: 16px;
+      margin-top: 5px;
+      color: #ffecec;
+    }
+
+    .search-box {
+      background: #fff;
+      margin: 30px auto 0;
+      padding: 30px;
+      max-width: 1200px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
+    }
+
+    .search-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-form .dropdown-menu {
+      width: 500px;
+    }
+
+    .search-form .dropdown {
+      position: relative;
+      width: 200px;
+      flex: 1;
+    }
+
+    .dropdown-toggle {
+      padding: 12px 14px;
+      padding-top: 26px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      width: 100%;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      color: black;
+    }
+
+    .search-form .dropdown-label {
+      position: absolute;
+      top: 8px;
+      left: 14px;
+      font-size: 12px;
+      color: #888;
+      pointer-events: none;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 10;
+      padding: 10px;
+      width: 350px;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+    }
+
+    .dropdown-menu .trip-option,
+    .dropdown-menu .class-option {
+      color: #636365;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .trip-option:hover,
+    .class-option:hover {
+      background: #f0f0f0;
+    }
+
+    .trip-option .check-icon:not(:empty),
+    .class-option .check-icon:not(:empty) {
+      color: #e60012;
+    }
+
+    .trip-option:has(.check-icon:not(:empty)),
+    .class-option:has(.check-icon:not(:empty)) {
+      color: #e60012 !important; /* Dùng !important để ghi đè màu xám */
+    }
+
+    .passenger-row {
+      color: #636365;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+    }
+
+    .passenger-row .sub {
+      padding-top: 3px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .counter button {
+      width: 26px;
+      height: 26px;
+      border: none;
+      background: #eee;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .counter span {
+      margin: 0 10px;
+      min-width: 20px;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .dropdown-section-title {
+      font-size: 12px;
+      color: #9a9a9d;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .dropdown-section-title .line {
+      flex-grow: 1;
+      height: 1px;
+      background: #ccc;
+      margin-left: 10px;
+    }
+
+    .city-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .city-button {
+      padding: 8px 12px;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 14px;
+      color: black;
+      min-width: 60px;
+      white-space: nowrap;
+    }
+
+    .city-button:hover {
+      background: #e60012;
+      color: white;
+    }
+
+     .field {
+      position: relative;
+    }
+
+
+
+    .field input {
+      padding: 12px 14px;
+      padding-top: 26px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      width: 100%
+    }
+
+    .field label {
+      position: absolute;
+      top: 8px;
+      left: 14px;
+      font-size: 12px;
+      color: #888;
+      pointer-events: none;
+    }
+
+    .swap-button {
+      width: 32px;
+      height: 32px;
+      background-color: #e60012;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: white;
+      flex: 0 0 auto;
+    }
+
+    .swap-button i {
+      font-size: 14px;
+    }
+
+    .swap-button:hover {
+      background-color: #c40010;
+    }
+
+    .search-form button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background-color: #e60012;
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      width: auto;
+      height: 50px;
+      white-space: nowrap;
+    }
+
+    .search-form button i {
+      font-size: 16px;
+    }
+
+    .ticket-suggestions {
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .ticket-suggestions h2 {
+      font-size: 24px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .ticket-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .ticket-item {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: 0.3s ease;
+    }
+
+    .ticket-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .ticket-item img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .ticket-info {
+      padding: 15px;
+    }
+
+    .ticket-from {
+      font-size: 13px;
+      color: #999;
+    }
+
+    .ticket-to {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    .ticket-price {
+      font-size: 14px;
+      color: #444;
+    }
+
+    .ticket-price span {
+      color: #e60012;
+      font-weight: bold;
+    }
+
+    .options-inline {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .options-inline .dropdown {
+      position: relative;
+      width: auto;
+      display: inline-block;
+      padding-left: 3px;
+    }
+
+    .options-inline .dropdown-toggle {
+      border: none;
+      padding: 0;
+      font-size: 13px;
+      font-weight: bold;
+      background: transparent;
+      color: black;
+      position: relative;
+      cursor: pointer;
+      width: fit-content;
+    }
+
+    .options-inline .dropdown-menu {
+      z-index: 20;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="header-top">
+      <div class="logo">BDU Air</div>
+      <nav>
+        <ul>
+          <li><a href="#">Vé máy bay</a></li>
+          <li><a href="#">Đơn hàng</a></li>
+        </ul>
+      </nav>
+      <div class="auth-buttons">
+        <button>Đăng nhập</button>
+        <button>Đăng ký</button>
+      </div>
+    </div>
+
+    <div style="height: 15px;"></div>  <!-- KHOẢNG TRỐNG -->
+    <div class="header-title">Tìm Vé Máy Bay Giá Rẻ Cho Chuyến Đi Của Bạn</div>
+    <div class="header-subtitle">Đặt Vé Máy Bay & Tận Hưởng Ưu Đãi Du Lịch Đến Điểm Đến Của Bạn</div>
+
+    <section class="search-box">
+      <div class="options-inline">
+        <!-- Loại chuyến đi -->
+        <div class="field dropdown">
+          <div class="dropdown-toggle" onclick="toggleTripTypeMenu()" id="trip-type-toggle">
+            Chuyến khứ hồi <i class="fa-solid fa-angle-down"></i>
+          </div>
+          <div class="dropdown-menu" id="trip-type-menu">
+            <div class="trip-option" onclick="selectTripType('round')">Chuyến khứ hồi <span class="check-icon" id="check-round">✔</span></div>
+            <hr />
+            <div class="trip-option" onclick="selectTripType('oneway')">Một chiều <span class="check-icon" id="check-oneway"></span></div>
+          </div>
+        </div>
+
+        <!-- Hành khách -->
+        <div class="field dropdown">
+          <div class="dropdown-toggle" onclick="togglePassengerMenu()" id="passenger-toggle"> 
+            <i class="fa-solid fa-users"></i> 1 Hành khách <i class="fa-solid fa-angle-down"></i>
+          </div>
+          <div class="dropdown-menu" id="passenger-menu">
+            <div class="passenger-row">
+              <div>
+                <div>Người lớn</div>
+                <div class="sub">Tuổi 12+</div>
+              </div>
+              <div class="counter">
+                <button onclick="adjustPassenger('adult', -1)">-</button>
+                <span id="count-adult">1</span>
+                <button onclick="adjustPassenger('adult', 1)">+</button>
+              </div>
+            </div>
+            <hr />
+            <div class="passenger-row">
+              <div>
+                <div>Trẻ em</div>
+                <div class="sub">Tuổi từ 2 - 11</div>
+              </div>
+              <div class="counter">
+                <button onclick="adjustPassenger('child', -1)">-</button>
+                <span id="count-child">0</span>
+                <button onclick="adjustPassenger('child', 1)">+</button>
+              </div>
+            </div>
+            <hr />
+            <div class="passenger-row">
+              <div>
+                <div>Em bé</div>
+                <div class="sub">&lt; 2 năm</div>
+              </div>
+              <div class="counter">
+                <button onclick="adjustPassenger('infant', -1)">-</button>
+                <span id="count-infant">0</span>
+                <button onclick="adjustPassenger('infant', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hạng ghế -->
+        <div class="field dropdown">
+          <div class="dropdown-toggle" onclick="toggleClassMenu()" id="class-toggle"> 
+            Phổ thông <i class="fa-solid fa-angle-down"></i>
+          </div>
+          <div class="dropdown-menu" id="class-menu">
+            <div class="class-option" onclick="selectClass('Phổ thông')">Phổ thông <span class="check-icon" id="check-Phổ thông">✔</span></div>
+            <hr />
+            <div class="class-option" onclick="selectClass('Phổ thông đặc biệt')">Phổ thông đặc biệt <span class="check-icon" id="check-Phổ thông đặc biệt"></span></div>
+            <hr />
+            <div class="class-option" onclick="selectClass('Thương gia')">Thương gia <span class="check-icon" id="check-Thương gia"></span></div>
+            <hr />
+            <div class="class-option" onclick="selectClass('Hạng nhất')">Hạng nhất <span class="check-icon" id="check-Hạng nhất"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-form">
+
+        <!-- Điểm khởi hành -->
+        <div class="field dropdown">
+          <label class="dropdown-label" for="from">Từ</label>
+          <div class="dropdown-toggle" id="from-toggle" onclick="toggleDropdown('from')">Chọn điểm đi</div>
+          <div class="dropdown-menu" id="from-menu">
+            <div class="dropdown-section-title">Vietnam <span class="line"></span></div>
+            <div class="city-buttons" id="from-cities"></div>
+          </div>
+        </div>
+
+        <button class="swap-button" onclick="swapCities()">
+          <i class="fas fa-right-left"></i>
+        </button>
+
+        <!-- Điểm đến -->
+        <div class="field dropdown">
+          <label class="dropdown-label" for="to">Đến</label>
+          <div class="dropdown-toggle" id="to-toggle" onclick="toggleDropdown('to')">Chọn điểm đến</div>
+          <div class="dropdown-menu" id="to-menu">
+            <div class="dropdown-section-title">Vietnam <span class="line"></span></div>
+            <div class="city-buttons" id="to-cities"></div>
+          </div>
+        </div>
+
+        <!-- Ngày khởi hành -->
+        <div class="field">
+          <label for="depart-date">Khởi hành</label>
+          <input type="date" id="depart-date" min="">
+        </div>
+
+        <!-- Ngày về -->
+        <div class="field" id="return-date-field">
+          <label for="return-date">Về</label>
+          <input type="date" id="return-date" min="">
+        </div>
+
+        <!-- Nút tìm kiếm -->
+        <button onclick="searchTickets()">
+          <i class="fas fa-search"></i> Tìm kiếm
+        </button>
+      </div>
+    </section>
+  </div>
+</header>
+
+<main>
+  <section class="ticket-suggestions">
+    <h2>Gợi ý vé máy bay độc quyền</h2>
+    <div id="ticket-results" class="ticket-list"></div>
+  </section>
+</main>
+
+<script>
+  let cities = [];
+  let selectedFrom = '';
+  let selectedTo = '';
+
+  window.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/cities')
+      .then(res => res.json())
+      .then(data => {
+        cities = data;
+        populateCities();
+        restoreSearchParams();
+      });
+
+    fetch(`/api/tickets/suggestions`)
+      .then(res => res.json())
+      .then(data => renderSuggestions(data.tickets || []));
+
+    setDefaultDates();
+    setupDateValidation();
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+      }
+    });
+  });
+
+  function renderSuggestions(tickets) {
+    const list = document.getElementById('ticket-results');
+    list.innerHTML = '';
+    tickets.forEach(f => {
+      const item = document.createElement('div');
+      item.className = 'ticket-item';
+      item.innerHTML = `
+        <img src="${f.image}" alt="${f.to}">
+        <div class="ticket-info">
+          <p class="ticket-from">${f.from}</p>
+          <p class="ticket-to">✈ ${f.to}</p>
+          <p class="ticket-price">Bắt đầu từ <span>${parseInt(f.price).toLocaleString()} VND</span></p>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  function setDefaultDates() {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const format = d => d.toISOString().split('T')[0];
+
+    // Thiết lập giá trị mặc định
+    document.getElementById('depart-date').value = format(today);
+    document.getElementById('return-date').value = format(tomorrow);
+
+    // Thiết lập ngày tối thiểu là hôm nay
+    document.getElementById('depart-date').min = format(today);
+    document.getElementById('return-date').min = format(today);
+  }
+
+  function setupDateValidation() {
+    const departInput = document.getElementById('depart-date');
+    const returnInput = document.getElementById('return-date');
+    const today = new Date().toISOString().split('T')[0];
+
+    const validateDates = () => {
+      const departDate = new Date(departInput.value);
+      const returnDate = new Date(returnInput.value);
+
+      // Đảm bảo ngày khởi hành không trong quá khứ
+      if (departDate < new Date(today)) {
+        departInput.value = today;
+      }
+
+      // Cập nhật ngày tối thiểu cho return-date
+      returnInput.min = departInput.value;
+
+      // Nếu ngày về trước ngày khởi hành, điều chỉnh ngày về
+      if (returnDate < departDate) {
+        returnInput.value = departInput.value;
+      }
+    };
+
+    departInput.addEventListener('change', validateDates);
+    returnInput.addEventListener('change', () => {
+      const departDate = new Date(departInput.value);
+      const returnDate = new Date(returnInput.value);
+      if (returnDate < departDate) {
+        returnInput.value = departInput.value;
+      }
+    });
+
+    validateDates(); // Gọi lần đầu
+  }
+
+  function searchTickets() {
+    const from = selectedFrom;
+    const to = selectedTo;
+    const departDate = document.getElementById('depart-date').value;
+    const returnDate = document.getElementById('return-date').value;
+    const tripType = document.getElementById('trip-type-toggle').textContent.includes('khứ hồi') ? 'round' : 'oneway';
+    const passengers = {
+      adult: parseInt(document.getElementById('count-adult').textContent),
+      child: parseInt(document.getElementById('count-child').textContent),
+      infant: parseInt(document.getElementById('count-infant').textContent)
+    };
+    const seatClass = document.getElementById('class-toggle').textContent.trim();
+
+    // Lưu vào localStorage
+    localStorage.setItem('searchParams', JSON.stringify({
+      from,
+      to,
+      departDate,
+      returnDate,
+      tripType,
+      passengers,
+      seatClass
+    }));
+
+    if (!from || !to || !departDate) {
+      alert('Vui lòng điền đầy đủ thông tin!');
+      return;
+    }
+
+    // Tạo query string
+    const query = new URLSearchParams({
+      from,
+      to,
+      departDate,
+      returnDate: tripType === 'round' ? returnDate : '',
+      tripType,
+      adult: passengers.adult,
+      child: passengers.child,
+      infant: passengers.infant,
+      seatClass
+    }).toString();
+
+    // Chuyển hướng sang trang tìm vé
+    window.location.href = `search.html?${query}`;
+  }
+
+  function populateCities() {
+    const fromCities = document.getElementById('from-cities');
+    const toCities = document.getElementById('to-cities');
+    fromCities.innerHTML = '';
+    toCities.innerHTML = '';
+
+    cities.forEach(city => {
+      const button1 = document.createElement('div');
+      button1.className = 'city-button';
+      button1.textContent = `${city.city_name} (${city.airport_code})`;
+      button1.dataset.city = city.city_name; // Lưu city_name để so sánh
+      button1.dataset.code = city.airport_code; // Lưu airport_code
+      button1.onclick = () => selectCity('from', city.city_name, city.airport_code);
+      fromCities.appendChild(button1);
+
+      const button2 = document.createElement('div');
+      button2.className = 'city-button';
+      button2.textContent = `${city.city_name} (${city.airport_code})`;
+      button2.dataset.city = city.city_name;
+      button2.dataset.code = city.airport_code;
+      button2.onclick = () => selectCity('to', city.city_name, city.airport_code);
+      toCities.appendChild(button2);
+    });
+  }
+
+  function toggleDropdown(type) {
+    const menu = document.getElementById(`${type}-menu`);
+    const isOpen = menu.classList.contains('show');
+    document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+    if (!isOpen) {
+      menu.classList.add('show');
+    }
+  }
+
+  function selectCity(type, city, code) {
+    const toggle = document.getElementById(`${type}-toggle`);
+    toggle.textContent = `${city} (${code})`; // Hiển thị dạng "Tp.Hồ Chí Minh (SGN)"
+    if (type === 'from') {
+      selectedFrom = city; // Vẫn lưu city_name để so sánh
+    } else {
+      selectedTo = city;
+    }
+    document.getElementById(`${type}-menu`).classList.remove('show');
+    filterCities();
+  }
+
+  function filterCities() {
+    const fromCities = document.querySelectorAll('#from-cities .city-button');
+    const toCities = document.querySelectorAll('#to-cities .city-button');
+
+    fromCities.forEach(btn => {
+      btn.style.opacity = btn.dataset.city === selectedTo ? '0.5' : '1';
+      btn.style.pointerEvents = btn.dataset.city === selectedTo ? 'none' : 'auto';
+    });
+
+    toCities.forEach(btn => {
+      btn.style.opacity = btn.dataset.city === selectedFrom ? '0.5' : '1';
+      btn.style.pointerEvents = btn.dataset.city === selectedFrom ? 'none' : 'auto';
+    });
+  }
+
+  function swapCities() {
+    const temp = selectedFrom;
+    selectedFrom = selectedTo;
+    selectedTo = temp;
+
+    const fromToggle = document.getElementById('from-toggle');
+    const toToggle = document.getElementById('to-toggle');
+    
+    // Tìm airport_code tương ứng
+    const fromCity = cities.find(c => c.city_name === selectedFrom);
+    const toCity = cities.find(c => c.city_name === selectedTo);
+    
+    fromToggle.textContent = selectedFrom ? `${selectedFrom} (${fromCity?.airport_code})` : 'Chọn điểm đi';
+    toToggle.textContent = selectedTo ? `${selectedTo} (${toCity?.airport_code})` : 'Chọn điểm đến';
+    filterCities();
+  }
+
+  let tripType = 'round';
+  function toggleTripTypeMenu() {
+    closeAllDropdowns();
+    document.getElementById('trip-type-menu').classList.toggle('show');
+  }
+
+  function selectTripType(type) {
+    tripType = type;
+    document.getElementById('trip-type-toggle').innerHTML = `${type === 'round' ? 'Chuyến khứ hồi' : 'Một chiều'} <i class="fa-solid fa-angle-down"></i>`;
+    const returnField = document.getElementById('return-date-field');
+    const fromField = document.querySelector('.field.dropdown:nth-child(1)');
+    const toField = document.querySelector('.field.dropdown:nth-child(3)');
+
+    if (type === 'oneway') {
+      returnField.style.display = 'none';
+      fromField.classList.add('expand-field');
+      toField.classList.add('expand-field');
+    } else {
+      returnField.style.display = 'block';
+      fromField.classList.remove('expand-field');
+      toField.classList.remove('expand-field');
+    }
+
+    document.getElementById('check-round').textContent = type === 'round' ? '✔' : '';
+    document.getElementById('check-oneway').textContent = type === 'oneway' ? '✔' : '';
+    document.getElementById('trip-type-menu').classList.remove('show');
+  }
+
+  let passengerCounts = { adult: 1, child: 0, infant: 0 };
+  function togglePassengerMenu() {
+    closeAllDropdowns();
+    document.getElementById('passenger-menu').classList.toggle('show');
+  }
+
+  function adjustPassenger(type, delta) {
+    let total = passengerCounts.adult + passengerCounts.child + passengerCounts.infant;
+
+    // Kiểm tra trước khi thay đổi
+    if (delta > 0 && total >= 8) {
+      return; // Không cho tăng nếu tổng đã đạt 8
+    }
+
+    // Cập nhật số lượng theo loại
+    if (type === 'adult' && passengerCounts.adult + delta >= 1) {
+      passengerCounts.adult += delta;
+    } else if (type === 'child' && passengerCounts.child + delta >= 0 && passengerCounts.child + delta <= 7) {
+      passengerCounts.child += delta;
+    } else if (type === 'infant' && passengerCounts.infant + delta >= 0 && passengerCounts.infant + delta <= 1) {
+      passengerCounts.infant += delta;
+    } else {
+      return; // Return nếu điều kiện không thỏa mãn
+    }
+
+    // Cập nhật giao diện
+    document.getElementById('count-adult').textContent = passengerCounts.adult;
+    document.getElementById('count-child').textContent = passengerCounts.child;
+    document.getElementById('count-infant').textContent = passengerCounts.infant;
+    document.getElementById('passenger-toggle').innerHTML = ` <i class="fa-solid fa-users"></i> ${passengerCounts.adult + passengerCounts.child + passengerCounts.infant} Hành khách <i class="fa-solid fa-angle-down"></i>`;
+  }
+
+  function toggleClassMenu() {
+    closeAllDropdowns();
+    document.getElementById('class-menu').classList.toggle('show');
+  }
+
+  function selectClass(type) {
+    document.getElementById('class-toggle').innerHTML = `${type} <i class="fa-solid fa-angle-down"></i>`;
+    ['Phổ thông', 'Phổ thông đặc biệt', 'Thương gia', 'Hạng nhất'].forEach(t => {
+      document.getElementById(`check-${t}`).textContent = t === type ? '✔' : '';
+    });
+    document.getElementById('class-menu').classList.remove('show');
+  }
+
+  function closeAllDropdowns() {
+    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+  }
+
+  function restoreSearchParams() {
+    const params = JSON.parse(localStorage.getItem('searchParams'));
+    if (!params) return;
+
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const format = d => d.toISOString().split('T')[0];
+    const todayStr = format(today);
+    const tomorrowStr = format(tomorrow);
+
+    // Khôi phục điểm đi
+    if (params.from) {
+      const fromCity = cities.find(c => c.city_name === params.from);
+      if (fromCity) {
+        selectedFrom = params.from;
+        document.getElementById('from-toggle').textContent = `${params.from} (${fromCity.airport_code})`;
+      }
+    }
+
+    // Khôi phục điểm đến
+    if (params.to) {
+      const toCity = cities.find(c => c.city_name === params.to);
+      if (toCity) {
+        selectedTo = params.to;
+        document.getElementById('to-toggle').textContent = `${params.to} (${toCity.airport_code})`;
+      }
+    }
+
+    // Khôi phục ngày khởi hành
+    if (params.departDate) {
+      const departDate = new Date(params.departDate);
+      // Nếu ngày khởi hành trong quá khứ, sử dụng ngày hôm nay
+      document.getElementById('depart-date').value = departDate < today ? todayStr : params.departDate;
+    } else {
+      document.getElementById('depart-date').value = todayStr;
+    }
+
+    // Khôi phục ngày về
+    if (params.returnDate && params.tripType === 'round') {
+      const returnDate = new Date(params.returnDate);
+      const adjustedDepartDate = new Date(document.getElementById('depart-date').value);
+      // Nếu ngày về trong quá khứ hoặc trước ngày khởi hành, sử dụng ngày mai hoặc ngày khởi hành
+      if (returnDate < today || returnDate < adjustedDepartDate) {
+        document.getElementById('return-date').value = returnDate < adjustedDepartDate ? format(adjustedDepartDate) : tomorrowStr;
+      } else {
+        document.getElementById('return-date').value = params.returnDate;
+      }
+    } else {
+      document.getElementById('return-date').value = tomorrowStr;
+    }
+
+    // Thiết lập ngày tối thiểu
+    document.getElementById('depart-date').min = todayStr;
+    document.getElementById('return-date').min = document.getElementById('depart-date').value;
+
+    // Khôi phục loại chuyến
+    if (params.tripType) {
+      selectTripType(params.tripType);
+    }
+
+    // Khôi phục hành khách
+    if (params.passengers) {
+      passengerCounts = params.passengers;
+      document.getElementById('count-adult').textContent = params.passengers.adult;
+      document.getElementById('count-child').textContent = params.passengers.child;
+      document.getElementById('count-infant').textContent = params.passengers.infant;
+      document.getElementById('passenger-toggle').innerHTML = ` <i class="fa-solid fa-users"></i> ${params.passengers.adult + params.passengers.child + params.passengers.infant} Hành khách <i class="fa-solid fa-angle-down"></i>`;
+    }
+
+    // Khôi phục hạng ghế
+    if (params.seatClass) {
+      selectClass(params.seatClass);
+    }
+
+    // Cập nhật giao diện
+    filterCities();
+    setupDateValidation();
+  }
+</script>
+
+</body>
+</html>
